@@ -1,0 +1,5 @@
+development:
+    dialect: postgres
+    datasource: host=127.0.0.1 dbname=task_app_dev sslmode=disable
+    dir: migrations/postgresql
+    table: gorp_migrations
