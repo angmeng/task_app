@@ -36,7 +36,7 @@ func GetDBQuery(c *fiber.Ctx, model interface{}) (*Query, error) {
 		QueryParser = rql.MustNewParser(rql.Config{
 			Model:         model,
 			FieldSep:      ".",
-			LimitMaxValue: 50,
+			LimitMaxValue: 20,
 		})
 	)
 
@@ -74,7 +74,12 @@ func GetDBQuery(c *fiber.Ctx, model interface{}) (*Query, error) {
 		rq.Size = params.Size
 	}
 
-	rq.Page = params.Page
+	if params.Page == 0 {
+		rq.Page = 1
+	} else {
+		rq.Page = params.Page
+	}
+
 	rq.Sort = q.Sort
 
 	fmt.Println("q", rq)

@@ -31,23 +31,9 @@ func (repo *Repository) All(rq *queryparser.Query) (taskModel.Pagination, error)
 	q := repo.Session.SQL().
 		SelectFrom("tasks").
 		Where(rq.Filter).
+		Limit(rq.Size).
+		Offset(rq.Size * rq.Page).
 		OrderBy(sortBy)
-
-	if rq.Page == 0 {
-		err := q.All(&tasks)
-
-		if err != nil {
-			return pagination, err
-		}
-
-		pagination.Data = tasks
-		pagination.Meta.TotalResults = uint64(len(tasks))
-		return pagination, nil
-	}
-
-	if rq.Page <= 0 {
-		rq.Page = 1
-	}
 
 	pg := q.Paginate(uint(rq.Size))
 	err := pg.Page(uint(rq.Page)).All(&tasks)
@@ -57,7 +43,6 @@ func (repo *Repository) All(rq *queryparser.Query) (taskModel.Pagination, error)
 
 	pagination.Data = tasks
 	pagination.Meta.CurrentPage = uint(rq.Page)
-
 	pagination.Meta.TotalResults, err = pg.TotalEntries()
 	if err != nil {
 		return pagination, err

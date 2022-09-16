@@ -66,12 +66,4 @@ func Setup(app *fiber.App) {
 		MaxAge:           0,
 		AllowCredentials: true,
 	})))
-
-	// app.Use(basicauth.New(basicauth.Config{
-	// 	Users: map[string]string{
-	// 		"apple": "12345678",
-	// 		"admin": "123456789",
-	// 	},
-	// }))
-
 }

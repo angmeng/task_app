@@ -15,7 +15,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each $taskList as task}
+    {#each taskList as task}
       <tr>
         <Task task={task}/>
       </tr>
@@ -27,7 +27,7 @@
   table {
     width: 100%;
   }
-  
+
   table th {
     text-align: left;
   }

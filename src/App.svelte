@@ -1,27 +1,22 @@
 <script>
 	import { onMount } from "svelte";
-  import { apiData, taskList, meta } from './tasks.js';
+  import { apiData, taskList, meta, GetTaskList } from './tasks.js';
 	import TaskList from './TaskList.svelte';
 	import Pagination from './Pagination.svelte';
 	import NewTask from './NewTask.svelte';
 
-  onMount(async () => {
-		fetch("http://localhost:3000/api/tasks")
-		.then(response => response.json())
-		.then(data => {
-			console.log(data);
-			apiData.set(data);
-		}).catch(error => {
-			console.log(error);
-			return [];
-		});
+	let innerApiData;
+	apiData.subscribe(value => {
+		innerApiData = value;
 	});
+
+  onMount(async () => GetTaskList());
 </script>
 
 <main>
 	<h1>Task App</h1>
 	<NewTask/>
-	<TaskList taskList={taskList}/>
+	<TaskList taskList={$taskList}/>
 	<Pagination meta={$meta}/>
 </main>
 

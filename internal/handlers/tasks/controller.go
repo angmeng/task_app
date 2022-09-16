@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/a8m/rql"
-	"github.com/angmeng/task_app/internal/models/task"
 	taskModel "github.com/angmeng/task_app/internal/models/task"
 	taskRepo "github.com/angmeng/task_app/internal/repositories/tasks"
 	"github.com/angmeng/task_app/pkg/queryparser"
@@ -57,12 +56,14 @@ func Create(c *fiber.Ctx) error {
 	repo := taskRepo.NewRepository(sess)
 
 	if err := c.BodyParser(&taskParams); err != nil {
+		fmt.Printf("error parsing body: %v", err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
 	if err := validator.ValidateStruct(taskParams); err != nil {
+		fmt.Printf("error validate task: %v", err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			// "message": err.Error(),
 			"message": govalidator.ErrorsByField(err),
@@ -72,10 +73,10 @@ func Create(c *fiber.Ctx) error {
 	// a middleware will verify the access token from client to authenticated the valid user.
 	// we will skip this for now.
 	// taskParams.UserID = authenticatedUser.ID
-	taskParams.StatusID = task.NOT_URGENT
 	task, err := repo.Create(taskParams)
 
 	if err != nil {
+		fmt.Printf("error create task: %v", err)
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": err.Error(),
 		})

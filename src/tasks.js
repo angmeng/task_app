@@ -15,3 +15,15 @@ export const meta = derived(apiData, ($taskResponse) => {
   }
   return {};
 });
+
+export function GetTaskList() {
+  fetch("http://localhost:3000/api/tasks")
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data);
+        apiData.set(data);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+}
