@@ -3,7 +3,7 @@ package queryparser
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
+	"log"
 	"strings"
 
 	"github.com/a8m/rql"
@@ -36,22 +36,20 @@ func GetDBQuery(c *fiber.Ctx, model interface{}) (*Query, error) {
 		QueryParser = rql.MustNewParser(rql.Config{
 			Model:         model,
 			FieldSep:      ".",
-			LimitMaxValue: 20,
+			LimitMaxValue: 10,
 		})
 	)
 
 	if v := c.Query(QueryParam); v != "" {
-		b, err = base64.StdEncoding.DecodeString(v)
-	} else {
-		return &rq, nil
-	}
+		if b, err = base64.StdEncoding.DecodeString(v); err != nil {
+			log.Printf("StdEncoding DecodeString error: %#v", err)
+			return &rq, err
+		}
 
-	if err != nil {
-		return &rq, err
-	}
-
-	if err := json.Unmarshal(b, &params); err != nil {
-		return &rq, err
+		if err := json.Unmarshal(b, &params); err != nil {
+			log.Printf("Unmarshal query error: %#v", err)
+			return &rq, err
+		}
 	}
 
 	if params.Filter == nil {
@@ -60,6 +58,7 @@ func GetDBQuery(c *fiber.Ctx, model interface{}) (*Query, error) {
 
 	q, err := QueryParser.ParseQuery(&rql.Query{Filter: params.Filter, Sort: params.Sort})
 	if err != nil {
+		log.Printf("ParseQuery error: %#v", err)
 		return &rq, err
 	}
 
@@ -68,7 +67,7 @@ func GetDBQuery(c *fiber.Ctx, model interface{}) (*Query, error) {
 		rq.Filter = parse(q.FilterExp, q.FilterArgs)
 	}
 
-	if params.Size <= 0 {
+	if params.Size == 0 {
 		rq.Size = 10
 	} else {
 		rq.Size = params.Size
@@ -82,7 +81,7 @@ func GetDBQuery(c *fiber.Ctx, model interface{}) (*Query, error) {
 
 	rq.Sort = q.Sort
 
-	fmt.Println("q", rq)
+	// fmt.Println("q", rq)
 	return &rq, err
 }
 

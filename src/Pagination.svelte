@@ -8,7 +8,7 @@
   {:else}
     <a href="/" style="padding: 1em;" class="isDisabled">Previous</a>
   {/if}
-  
+
   {#if meta.current_page < meta.last_page}
     <a href="/" style="padding: 1em;">Next</a>
   {:else}
@@ -18,7 +18,8 @@
 <div>
   <p>
     Total Count: {meta.total_results}<br>
-    Total Page: {(meta.last_page - meta.current_page) + 1}
+    Total Page: {(meta.last_page - meta.current_page) + 1}<br>
+    Current Page: {meta.current_page}
   </p>
 </div>
 

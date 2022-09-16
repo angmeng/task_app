@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	taskModel "github.com/angmeng/task_app/internal/models/task"
@@ -18,6 +19,8 @@ func NewRepository(sess db.Session) *Repository {
 }
 
 func (repo *Repository) All(rq *queryparser.Query) (taskModel.Pagination, error) {
+	log.Printf("query: %#v", rq)
+
 	var (
 		tasks      []taskModel.Task
 		pagination taskModel.Pagination
@@ -32,7 +35,7 @@ func (repo *Repository) All(rq *queryparser.Query) (taskModel.Pagination, error)
 		SelectFrom("tasks").
 		Where(rq.Filter).
 		Limit(rq.Size).
-		Offset(rq.Size * rq.Page).
+		Offset(rq.Size * (rq.Page - 1)).
 		OrderBy(sortBy)
 
 	pg := q.Paginate(uint(rq.Size))

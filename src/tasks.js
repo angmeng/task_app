@@ -27,3 +27,22 @@ export function GetTaskList() {
         return [];
       });
 }
+
+export async function DeleteTask(id) {
+  var result = confirm("confirm to delete?");
+
+  if (result) {
+    const res = await fetch('http://localhost:3000/api/tasks/' + id, {
+			method: 'DELETE'
+		})
+		
+		const json = await res.json()
+		let result = JSON.stringify(json)
+    if (res.status == 200) {
+      alert("Task deleted successfully");
+      GetTaskList();
+    } else {
+      alert(result.message);
+    }
+  }
+}
