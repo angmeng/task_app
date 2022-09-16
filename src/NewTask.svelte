@@ -31,7 +31,7 @@
     if (res.status == 201) {
       alert("Task added successfully");
       e.target.reset();
-      GetTaskList();
+      GetTaskList("");
     } else {
       alert(result.message);
     }

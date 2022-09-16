@@ -1,8 +1,11 @@
 <script>
   import Task from './Task.svelte';
+  import SearchTask from './SearchTask.svelte';
 
   export let taskList;
 </script>
+
+<SearchTask/>
 
 <table>
   <thead>
@@ -11,6 +14,7 @@
       <th>Description</th>
       <th>Due Date</th>
       <th>Creation Date</th>
+      <th>Status</th>
       <th>Actions</th>
     </tr>
   </thead>

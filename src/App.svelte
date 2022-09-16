@@ -10,7 +10,7 @@
 		innerApiData = value;
 	});
 
-  onMount(async () => GetTaskList());
+  onMount(async () => GetTaskList(""));
 </script>
 
 <main>
