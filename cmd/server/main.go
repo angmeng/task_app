@@ -13,14 +13,17 @@ import (
 	"github.com/angmeng/task_app/routes"
 	"github.com/angmeng/task_app/stores"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html"
 )
 
 func main() {
+	engine := html.New("./templates", ".html")
 	config.Init()
 	app := fiber.New(fiber.Config{
 		AppName:     fmt.Sprintf("Task App %s", helpers.GetAppEnv()),
 		Prefork:     helpers.IsProduction(),
 		IdleTimeout: 5 * time.Second,
+		Views:       engine, //set as render engine
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return c.Status(500).SendString(err.Error())
 		},

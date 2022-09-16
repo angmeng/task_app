@@ -6,7 +6,6 @@ import (
 
 	"github.com/angmeng/task_app/pkg/helpers"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -68,11 +67,11 @@ func Setup(app *fiber.App) {
 		AllowCredentials: true,
 	})))
 
-	app.Use(basicauth.New(basicauth.Config{
-		Users: map[string]string{
-			"apple": "12345678",
-			"admin": "123456789",
-		},
-	}))
+	// app.Use(basicauth.New(basicauth.Config{
+	// 	Users: map[string]string{
+	// 		"apple": "12345678",
+	// 		"admin": "123456789",
+	// 	},
+	// }))
 
 }
