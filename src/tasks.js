@@ -1,3 +1,4 @@
+import { debug } from 'svelte/internal';
 import { writable, derived } from 'svelte/store';
 
 let query = {};
