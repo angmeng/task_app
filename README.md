@@ -1,107 +1,40 @@
-# This repo is no longer maintained. Consider using `npm init vite` and selecting the `svelte` option or — if you want a full-fledged app framework and don't mind using pre-1.0 software — use [SvelteKit](https://kit.svelte.dev), the official application framework for Svelte.
+# Task App
 
----
+Guides to setup the app locally.
 
-# svelte app
+1. Create a database with a name `task_app_dev` in postgresql server. You can change the database name to whichever you want and just need to update the `DATABASE_NAME` value in `.env` file.
+2. Eventually we will not commit the `.env` into the repo, this is just for demostration.
+3. Update the `DATABASE_USER` and `DATABASE_PASS` for the database connection access in the `.env` file.
+4. There is a config file named `dbconfig.yml` under `config` folder also needed to update the connection setting accordingly.  
+5. Run the following command in your terminal to start the backend server: `make  start_api`
+6. Open another terminal and run the following command to start the front-end server: `make start_fe`
+7. Open `http://localhost:8080` in your browser and you will see the homepage of the app.
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+**Front-end**
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+I'm using Svelte as the front-end framework which I can learn quicky (first time) and start to develop a simple working prototype as I dont have any experience in ReactJS. The business logic are located in the files under `src` folder.
 
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
-```
+**Back-end**
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+The apis in backend is developed using [Fiber](https://docs.gofiber.io/), an Express inspired web framework built on top of Fasthttp, a HTTP engine for GO and [upper/db](https://upper.io/v4/) as the database access layer to postgresql server.
 
+**Database migration**
 
-## Get started
+[sql-migrate](https://github.com/rubenv/sql-migrate) is a SQL Schema migration tool for Go, all the migration SQL files are located under `migrations/postgresql` folder.
 
-Install the dependencies...
+**Should Have user stories**
 
-```bash
-cd svelte-app
-npm install
-```
+1. *Sort by due date or create date.*
+   To achieve this goal, we will need to store the state to indicate the direction (ascending or descending) whenever user click on the sorting icon, update the value in the store and append the direction in the payload of the request to the API to get the result.
 
-...then start [Rollup](https://rollupjs.org):
+2. *Search based on task name.*
+   Append the text that entered by user to a query payload in the request and send to the API which is able to update the SQL statement to query in the table using "ILIKE" operator with case-insensitive pattern matching format.
 
-```bash
-npm run dev
-```
+**Risks**
 
-Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
+1. *There is a rick that a user may create more than 1000 tasks which might caused some server performance issue.*
+   One of the way to resolve it is to paginate all those records into multiple pages. We may set a ideal number of records to show in the page depend on the UI design. Let's say the optimal number of tasks to show in a page is 50, 1000 / 50 should have 20 pages, user can click on the page number link or next page link in the pagination bar and FE will send the page/offset number in the payload to the API to get the result.
 
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
+**Todo**
 
-If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
-
-## Building and running in production mode
-
-To create an optimised version of the app:
-
-```bash
-npm run build
-```
-
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
-
-
-## Single-page app mode
-
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
-
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
-
-```js
-"start": "sirv public --single"
-```
-
-## Using TypeScript
-
-This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
-
-```bash
-node scripts/setupTypeScript.js
-```
-
-Or remove the script via:
-
-```bash
-rm scripts/setupTypeScript.js
-```
-
-If you want to use `baseUrl` or `path` aliases within your `tsconfig`, you need to set up `@rollup/plugin-alias` to tell Rollup to resolve the aliases. For more info, see [this StackOverflow question](https://stackoverflow.com/questions/63427935/setup-tsconfig-path-in-svelte).
-
-## Deploying to the web
-
-### With [Vercel](https://vercel.com)
-
-Install `vercel` if you haven't already:
-
-```bash
-npm install -g vercel
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-vercel deploy --name my-project
-```
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public my-project.surge.sh
-```
+- The pagination in FE still need some work to get the page/offset number to send in the payload of the request.
