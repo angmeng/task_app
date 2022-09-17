@@ -79,9 +79,9 @@ func GetDBQuery(c *fiber.Ctx, model interface{}) (*Query, error) {
 		rq.Page = params.Page
 	}
 
+	q.Sort = strings.Replace(q.Sort, "asc", "ASC", -1)
+	q.Sort = strings.Replace(q.Sort, "desc", "DESC", -1)
 	rq.Sort = q.Sort
-
-	// fmt.Println("q", rq)
 	return &rq, err
 }
 

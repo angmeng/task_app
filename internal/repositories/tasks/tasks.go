@@ -2,7 +2,7 @@ package tasks
 
 import (
 	"fmt"
-	"log"
+	"strings"
 	"time"
 
 	taskModel "github.com/angmeng/task_app/internal/models/task"
@@ -19,16 +19,15 @@ func NewRepository(sess db.Session) *Repository {
 }
 
 func (repo *Repository) All(rq *queryparser.Query) (taskModel.Pagination, error) {
-	log.Printf("query: %#v", rq)
-
 	var (
 		tasks      []taskModel.Task
 		pagination taskModel.Pagination
-		sortBy     = "due_date"
 	)
 
-	if rq.Sort != "" {
-		sortBy = rq.Sort
+	sorting := strings.Split(rq.Sort, ", ")
+	var sorted []interface{}
+	for i := range sorting {
+		sorted = append(sorted, sorting[i])
 	}
 
 	q := repo.Session.SQL().
@@ -36,7 +35,7 @@ func (repo *Repository) All(rq *queryparser.Query) (taskModel.Pagination, error)
 		Where(rq.Filter).
 		Limit(rq.Size).
 		Offset(rq.Size * (rq.Page - 1)).
-		OrderBy(sortBy)
+		OrderBy(sorted...)
 
 	pg := q.Paginate(uint(rq.Size))
 	err := pg.Page(uint(rq.Page)).All(&tasks)

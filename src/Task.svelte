@@ -49,8 +49,9 @@
 <td>
   {#if editable == false}
     <a href="#" on:click="{() => editable = !editable }"> Edit</a> | 
-    <a href="#" on:click="{() => DeleteTask(task.id) }"> Delete</a>
+    <a href="#" on:click={ DeleteTask(task.id) }> Delete</a>
   {:else}
-    <button on:click={ updateTask }> Update</button>
+    <button on:click={ updateTask }> Update</button> | 
+    <a href="#" on:click="{() => editable = !editable }"> Cancel</a>
   {/if}
 </td>

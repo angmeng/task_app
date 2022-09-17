@@ -4,18 +4,18 @@
   let searchText = "";
 
   function onSubmit() {
-    GetTaskList(searchText);
+    GetTaskList(searchText, []);
   }
 
   function reset() {
     searchText = "";
-    GetTaskList("");
+    GetTaskList("", []);
   }
 </script>
 
 <div>
   <form>
-    <input type="text" placeholder="Search by name..." name="search" required bind:value={searchText}>
+    <input type="text" placeholder="Search by name..." name="search" bind:value={searchText}>
     <button on:click={onSubmit}>Search</button>
     <button on:click={reset}>Reset</button>
   </form>

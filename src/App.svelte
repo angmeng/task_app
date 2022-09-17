@@ -1,16 +1,11 @@
 <script>
 	import { onMount } from "svelte";
-  import { apiData, taskList, meta, GetTaskList } from './tasks.js';
+  import { taskList, meta, GetTaskList } from './tasks.js';
 	import TaskList from './TaskList.svelte';
 	import Pagination from './Pagination.svelte';
 	import NewTask from './NewTask.svelte';
 
-	let innerApiData;
-	apiData.subscribe(value => {
-		innerApiData = value;
-	});
-
-  onMount(async () => GetTaskList(""));
+  onMount(async () => GetTaskList("", []));
 </script>
 
 <main>

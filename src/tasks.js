@@ -1,7 +1,8 @@
 import { writable, derived } from 'svelte/store';
 
+let query = {};
+let sortData = []
 export const apiData = writable({});
-export const query = writable({});
 
 export const taskList = derived(apiData, ($taskResponse) => {
   if ($taskResponse.data){
@@ -17,9 +18,7 @@ export const meta = derived(apiData, ($taskResponse) => {
   return {};
 });
 
-export function GetTaskList(searchText) {
-  console.log("search text: "+searchText)
-  query["sort"] = ["+due_date", "+id"]
+export function GetTaskList(searchText, sorting) {
   if (searchText != "") {
     query["filter"] = {}
     query["filter"]["name"] = { "$like": "%"+searchText+"%" }
@@ -27,8 +26,17 @@ export function GetTaskList(searchText) {
     delete query["filter"]
   }
 
+  if (sortData.length == 0) {
+    sortData = ["+due_date", "+created_at"];
+  }
+
+  if (sorting.length > 0) {
+    sortData = sorting;
+  }
+
+  query["sort"] = sortData
+
   let payload = JSON.stringify(query);
-  // console.log(payload)
   let url = "http://localhost:3000/api/tasks?query="+window.btoa(payload);
 
   fetch(url)
@@ -53,8 +61,7 @@ export async function DeleteTask(id) {
 		const json = await res.json()
 		let result = JSON.stringify(json)
     if (res.status == 200) {
-      alert("Task deleted successfully");
-      GetTaskList("");
+      GetTaskList("", []);
     } else {
       alert(result.message);
     }
@@ -76,7 +83,7 @@ export async function UpdateTask(id, data) {
 		let result = JSON.stringify(json)
     if (res.status == 200) {
       alert("Task updated successfully");
-      GetTaskList("");
+      GetTaskList("", []);
     } else {
       alert(result.message);
     }
