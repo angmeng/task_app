@@ -10,4 +10,5 @@ migrate_db:
 start_api: update_modules migrate_db backend
 
 start_fe:
+	npm install
 	npm run dev
