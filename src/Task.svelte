@@ -3,8 +3,10 @@
 
   export let task;
   let editable = false;
+  let hourMs = 1000 * 60 * 60;
+  let sevenDaysMs = hourMs * 24 * 7
 
-  function parseDate(date) {
+  function parseDateToString(date) {
     let d = new Date(date)
     return d.toLocaleDateString();
   }
@@ -17,12 +19,27 @@
     UpdateTask(task.id, data);
     editable = !editable;
   }
+
+  function getStatus() {
+    let dueDate = new Date(task.due_date);
+    let currentDate = new Date();
+    let diffMs = dueDate.getTime() - currentDate.getTime();
+    if (diffMs > 0) {
+      if (diffMs > sevenDaysMs) {
+        return "Not Urgent"
+      } else {
+        return "Due Soon"
+      }
+    } else {
+      return "Overdue"
+    }
+  }
 </script>
 
 {#if editable == false}
   <td>{task.name}</td>
   <td>{task.description}</td>
-  <td>{parseDate(task.due_date)}</td>
+  <td>{parseDateToString(task.due_date)}</td>
 {:else}
   <td>
     <input name="name" type="text" size="20" required placeholder="what would you like to do..." bind:value={task.name}>
@@ -34,17 +51,9 @@
     <input name="due_date" type="text" size="20" required bind:value={task.due_date}>
   </td>
 {/if}
-<td>{parseDate(task.created_at)}</td>
+<td>{parseDateToString(task.created_at)}</td>
 <td>
-  {#if task.status_id == 0}
-    Not Urgent
-  {:else if task.status_id == 1}
-    Due Soon
-  {:else if task.status_id == 2}
-    Overdue
-  {:else}
-    Unknown
-  {/if}
+  {getStatus()}
 </td>
 <td>
   {#if editable == false}
