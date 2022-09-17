@@ -25,14 +25,20 @@ The apis in backend is developed using [Fiber](https://docs.gofiber.io/), an Exp
 **Should Have user stories**
 
 1. *Sort by due date or create date.*
+
+
    To achieve this goal, we will need to store the state to indicate the direction (ascending or descending) whenever user click on the sorting icon, update the value in the store and append the direction in the payload of the request to the API to get the result.
 
 2. *Search based on task name.*
+
+
    Append the text that entered by user to a query payload in the request and send to the API which is able to update the SQL statement to query in the table using "ILIKE" operator with case-insensitive pattern matching format.
 
 **Risks**
 
 1. *There is a rick that a user may create more than 1000 tasks which might caused some server performance issue.*
+
+
    One of the way to resolve it is to paginate all those records into multiple pages. We may set a ideal number of records to show in the page depend on the UI design. Let's say the optimal number of tasks to show in a page is 50, 1000 / 50 should have 20 pages, user can click on the page number link or next page link in the pagination bar and FE will send the page/offset number in the payload to the API to get the result.
 
 **Todo**
